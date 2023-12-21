@@ -35,7 +35,6 @@ export default function AuthContextProvider({ children }: AuthContextProviderPro
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-        console.log(user);
         setUser(user);
       } else {
         // User is signed out
