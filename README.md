@@ -38,9 +38,13 @@
 
 ## Introduction
 
-This project is a versatile starter project for T4SG web development projects. The stack and development tools have been chosen carefully to enable teams to develop rapidly on a variety of projects and build apps that are more easily maintainable by clients post-handoff.
+This project is a modified version of T4SG's [starter project for web development projects](https://github.com/hcs-t4sg/starter-project-2023-v2), designed for ease of use in instructional settings for novice programmers learning React. This was created for Wintersession 2023-2024.
 
-The project uses Next.js, a React-based framework with significant optimizations. The frontend uses `shadcn/ui`, an open-source library of UI components that are built with Radix primitives and styled with Tailwind CSS. The backend uses Supabase, an open-source Firebase alternative. The entire stack is written in Typescript to provide comprehensive typesafety across both frontend and backend.
+The project uses Next.js, a React-based framework with significant optimizations. The frontend uses `shadcn/ui`, an open-source library of UI components that are built with Radix primitives and styled with Tailwind CSS. The backend uses Firebase. The entire stack is written in Typescript to provide comprehensive typesafety across both frontend and backend.
+
+Although this project utilizes the Next.js 13 App Router, it is designed to only utilize **client components**. This is for Wintersession instructional purposes to mimic a traditional client-side React + Firebase project. In this case, the Next.js App Router provides an easy folder-based routing system to avoid the overhead of using an external package like `react-router`.
+
+Although this project can be repurposed for larger-scale projects (such as T4SG semester projects), note that the Firebase integration has only been accomplished for client components. However, integrating Firebase with React Server Components is possible ([reference here](https://firebase.google.com/codelabs/firebase-nextjs#0)) and is recommended if you intend to build a more performant webapp for a larger-scale project. Utilizing a Typescript adapter/ODM for Firestore such as [Typesaurus](https://typesaurus.com/) or [Fireschema](https://github.com/yarnaimo/fireschema) is also recommended. 
 
 ---
 
@@ -90,56 +94,30 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
 
 5. You will also get a prompt to use the workspace's Typescript version; accept it. You may have to navigate to any `.ts` or `.tsx` file in the project and open it to receive the prompt. If you don't get one, or if you get an error that the path "does not point to a valid tsserver install", make sure you're using the workspace's Typescript version by pressing `cmd` + `shift` + `P` and typing "typescript", selecting `Typescript: Select Typescript Version`, and selecting `Use Workspace Version`. Again, you'll need to be viewing a `.tsx` or `.ts` file to do this.
 
-#### Supabase Connection Setup
+#### Firebase Connection Setup
 
-1. Visit the Supabase website, create an account (or login if you already have one), and create a new project. You will be prompted to set a **Database Password; remember it**. Wait for your database provisioning and setup to finish.
-
-   * Try to avoid using special characters like `?`, `$`, etc. in your password.
-
-2. There is a `.env.example` file in your local project directory (e.g. in VSCode). Duplicate it (into the same directory) and rename to `.env`. Inside `.env`, set the following variables according to your Supabase project settings:
-
-   - `NEXT_PUBLIC_SUPABASE_URL`: From Project Settings > API > Project URL.
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: From Project Settings > API > Project API Keys > `anon` `public`.
-   - `SECRET_SUPABASE_CONNECTION_STRING`: From Project Settings > Database > Connection String > Nodejs. Replace `[YOUR-PASSWORD]` with your database password.
-     - If you insist on using special characters in your password you will need to replace them with the **percent-encoded** version ([see this reference](https://stackoverflow.com/a/76551917))
-
-
-   The final result should look something like this:
+1. Log in with your Google account.
+2. Click on `Go to console` button.
+3. Click `Add Project` card.
+4. Give your project a name.
+5. Click on `Continue` button.
+6. Disable `Google Analytics for this project` (unless you wish to use it).
+7. Click `Create project` button.
+8. Click on the web icon button to create your web app. It will show a text popup `Web`.
+9. Register app by giving it a nickname and click `Register app` button.
+10. In your project folder, duplicate the `.env.example` file (in the root directory) and rename it to `.env`. Populate the environment variables in that file with the config values from your Firebase dashboard. (You can view these values from your dashboard by going to Project Overview > Gear in top left > Project Settings > Scroll down to Your Apps.) The .env should look something like:
 
    ```shell
    # Some other comments above
-   NEXT_PUBLIC_SUPABASE_URL="https://abcdefghijklmnopqrst.supabase.co"
-   NEXT_PUBLIC_SUPABASE_ANON_KEY="longlonglongstring"
-   SECRET_SUPABASE_CONNECTION_STRING="postgresql://postgres:YourDatabasePasswordHere@db.abcdefghijklmnopqrst.supabase.co:5432/postgres"
+   NEXT_PUBLIC_FIREBASE_API_KEY="longstring"
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="projectname.firebaseapp.com"
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID="projectname"
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="projectname.appspot.com"
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="longint"
+   NEXT_PUBLIC_FIREBASE_APP_ID="longstring"
    ```
 
-   You should not share these keys publically, especially the `SECRET_SUPABASE_CONNECTION_STRING`. Note that this project uses a package from the popular [T3 stack](https://create.t3.gg/) to validate and provide typesafety to environment variables in `env.mjs` (more on this below). When using these environment variables in your code, you can import them from `env.mjs`. `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are used in the codebase itself and are thus included in this file. `SECRET_SUPABASE_CONNECTION_STRING` is used only in a helper script in `package.json` and not in the app itself, so it doesn't need to be validated.
-
-#### Supabase Database Setup
-
-1. In your Supabase project dashboard, navigate to `SQL Editor` in the left sidebar, then click `(+) New Query` > `New blank query`. If you wish, you can rename the query from "Untitled Query" to something else by clicking the dropdown in the left sidebar.
-2. In your starter code, there is a `setup.sql` file containing a SQL script that will set up the database for you. Copy the entire contents of the file and paste it into your new query.
-3. Run the query with the button in the bottom right or by pressing `cmd` + `return`. In the results panel, you should see the message `Success. No rows returned`.
-
-#### Supabase CLI Setup
-
-1. The Supabase CLI will be helpful for a number of functions, such as running Supabase locally and generating Typescript types from our database schema. For the CLI to work, you will have to install [Docker](https://www.docker.com). During the installation process, if Docker prompts you to run an `osascript`, make sure to run it.
-
-2. If you've done `npm install`, the CLI should already be installed. You can test it by running `npx supabase`, which will give you a version (`Supabase CLI 1.64.8`) and a list of commands.
-
-3. We preconfigured a command (in `package.json`) for you to easily generate type definitions in `lib/schema.ts` from your remote Supabase database schema. If you've created tables in Supabase, you can test this command now. Otherwise, make sure to run it frequently in development whenever you edit your database schema.
-
-   ```ts
-   // Introspects your remote Supabase database and generates types in lib/schema.ts
-   npm run types
-   ```
-
-   > Notes:
-   >
-   > - You need to have `SECRET_SUPABASE_CONNECTION_STRING` configured in `.env` in order for the above command to work.
-   > - If you want to generate type definitions for a local Supabase project, you can run the full version of the command (read more about it [here](https://supabase.com/docs/guides/api/rest/generating-types)) or edit the `npm` script in `package.json`.
-
-More instructions on troubleshooting potential errors are below.
+Note that this project uses a package from the popular [T3 stack](https://create.t3.gg/) to validate and provide typesafety to environment variables in `env.mjs` (more on this below). When using these environment variables in your code, you can import them from `env.mjs`.
 
 #### Run the webapp
 
@@ -198,6 +176,12 @@ npx tsc --noEmit
 
 A quick tip on coding with Typescript: When fixing type errors, you should avoid using [type assertions](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) (with `as`) and the [`any` type](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule) **as much as possible**. These functionalities are escape hatches built into Typescript to allow you to avoid type-checking, but they don't actually solve the underlying problem of a type error! Simply ignoring the problem by avoiding type-checking will only make future bugs much more difficult to fix. Personally, out of all the type errors I've resolved in Typescript, I've only had one situation where the `as` keyword was necessary; every other time, the type error exposed an important error/oversight in my code.
 
+Also, note that this project implements a few additions to make Typescript's type-checking more strict (and thus encourage better code). Because of this, you may get typing/warning errors when using code repurposed from projects with less strict type-checking. If these become overly burdensome for you/your team, feel free to remove/disable them!
+
+* The package `ts-reset` is installed, implementing additional rules surrounding JSON and array operations ([read more here](https://github.com/total-typescript/ts-reset?tab=readme-ov-file))
+* The rule `noUncheckedIndexedAccess` is set to `true` in `tsconfig.json` to improve typesafety of accessing objects ([read more here](https://www.totaltypescript.com/tips/make-accessing-objects-safer-by-enabling-nouncheckedindexedaccess-in-tsconfig))
+* The `eslint` config in `eslintrc.cjs` extends the rule configurations `plugin:@typescript-eslint/recommended-type-checked` and `plugin:@typescript-eslint/stylistic-type-checked`, whereas other projects may extend the less-strict configurations `plugin:@typescript-eslint/recommended` and `plugin:@typescript-eslint/stylistic` ([read more here](https://typescript-eslint.io/linting/typed-linting/)).
+
 Finally, note that type definitions for many `npm` packages are [maintained by the Typescript community](https://github.com/DefinitelyTyped/DefinitelyTyped) and may be found with the `@types/` prefix on [`npm`](https://www.npmjs.com), if they're not already included in the package itself (generally they are). Several of the config files in the project (ex: `.prettierrc.cjs`) manually import type definitions, but you generally will not need to worry about such syntax in your actual source code.
 
 > **More references**
@@ -245,8 +229,6 @@ npm start
 
 #### Tips for learning:
 
-Note that React 18 introduced server components, which form a new paradigm for conceptualizing and constructing webapps. This project uses the Next.js `app/` router, which was introduced in Next.js 13 and uses React server components. Server components are very new and can take a while to wrap one's head around (especially for people already accustomed to React's old "mental model"). However, React and Next.js development is shifting towards this new paradigm, just like how we shifted from using class components and lifecycle methods to using functional components and hooks in React a few years ago. So we at T4SG Eng want to move along with the rest of the developer community and ensure that we're learning/practicing the most relevant skills!
-
 If you are new to React, check out the React documentation first before touching Next.js. The Next.js docs have a great [React Essentials](https://nextjs.org/docs/getting-started/react-essentials) section. When browsing documentation or looking at tutorials for Next.js, try to first look for examples explicitly referencing Next 13 or the `app` router, not the `pages` router (which is the older way of building Next.js webapps).
 
 > **More references**
@@ -256,46 +238,6 @@ If you are new to React, check out the React documentation first before touching
 > - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 > - [Next.js GitHub repository](https://github.com/vercel/next.js/) - good place to ask for help!
 > - [Example Next.js project](https://github.com/shadcn/taxonomy) built by `shadcn`!
-
-### Supabase
-
-The backend uses [Supabase](https://supabase.com), an open-source Firebase alternative. (Both are BaaS platforms: backend as a service.) Supabase provides all of Firebase's most important functionality and more:
-
-- **Database:** Built on Postgres, a relational database which has better structure than Firebase's Firestore NoSQL database and is open-source (thus more easily maintainable by clients).
-- **Realtime:** Analogous to Firestore's `onSnapshot` realtime listeners, allowing you to listen to changes in the **database** (aka Postgres Changes). Supabase also offers Broadcast and Presence, which are other forms of realtime that provide ultra-fast synchronization for features like chatrooms or online games.
-- **User authentication:** Like Firebase, a simple auth system with all social providers and user permissions for database access.
-- **File storage:** Like Firebase, cloud storage for any kind of digital content.
-- **Edge functions:** Server-side Typescript functions that run on Supabase without needing to set up a backend server. Analogous to Firebase Cloud Functions, which are not available on the free tier!
-- **Local development:** Ability to easily create locally-hosted Supabase projects with tracked migration history (super useful when working in teams)
-- **Typesafety:** The Supabase CLI (command line interface) can be used to generate Typescript types based on your database schema, allowing for typesafe database queries.
-
-> **More references**
->
-> - [Official Supabase documentation](https://supabase.com/docs)
-> - [Example project](https://github.com/supabase/auth-helpers/tree/main/examples/nextjs) using Supabase auth with Next.js app router
-> - [Another example project](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
-
-##### Troubleshooting the Supabase CLI
-
-Whenever you're running the CLI (such as running the type-generating command above) you might get an error:
-
-```bash
-Cannot connect to the Docker daemon at unix:///Users/matthewsu/.docker/run/docker.sock. Is the docker daemon running?
-```
-
-Make sure you have Docker running, and start a new terminal and retry the command. If that still doesn't work, you may need to manually point your terminal to Docker in the terminal configuration. Example instructions for using a `zsh` terminal on MacOS:
-
-1. Find your `.zshrc` file. Instructions for finding it are [here](https://osxdaily.com/2021/11/18/where-the-zshrc-file-is-located-on-mac/#:~:text=zshrc%20file%20on%20a%20Mac,customizations%20to%20the%20z%20shell.); note that it is a hidden file, so you may have to press `cmd` + `shift` + `.` in Finder in order to see your hidden files.
-
-2. Open `.zshrc` with notepad and add this line:
-
-   ```bash
-   export DOCKER_HOST=unix://"$HOME/.docker/run/docker.sock"
-   ```
-
-3. Save and close `.zshrc`, then start a new terminal (make sure you're using a `zsh` terminal and not a `bash` terminal) and retry the command.
-
-Feel free to reach out for help!
 
 ### Environment variables
 
@@ -418,14 +360,6 @@ Allows us to run `eslint` after `prettier` on save, which is the fastest order.
 ## Deployment guides
 
 Deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker). The easiest way to deploy is with Vercel, which was created by the creators of Next.js!
-
-When deploying, make sure you set the appropriate environment variables for your deployment corresponding to those found in `.env`. That is, if you're using a separate Supabase project for production, use the environment variables for that project, but if you're just using your development database, you can paste in the contents of your local `.env` file.
-
-Additionally, you need to make sure you configure Supabase's redirect URLs to accept login requests from your deployed site. Specifically, it needs to accept `https://my-domain-name.com/auth/callback`, since Supabase redirects to the `/auth/callback` route after login. 
-
-The easiest way to do this is to login to your Supabase dashboard and navigate to Authentication (left sidebar) > URL Configuration > Redirect URLs > Add URL, and add the following URL: `https://my-domain-name.com/**`.
-
-Read more about it [here](https://supabase.com/docs/guides/auth#redirect-urls-and-wildcards).
 
 ---
 
