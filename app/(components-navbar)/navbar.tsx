@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useAuthContext } from "../(context)/providers";
+import { useAuthContext } from "../(context)/auth-context";
 
 export default function Navbar({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
   const { user } = useAuthContext();

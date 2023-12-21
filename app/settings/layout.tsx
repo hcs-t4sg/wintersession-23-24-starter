@@ -3,7 +3,7 @@ import { SidebarNav } from "@/components/global/sidebar-nav";
 import { Separator } from "@/components/ui/separator";
 import { PageHeader1, PageSubHeader1, TypographyP } from "@/components/ui/typography";
 import { redirect } from "next/navigation";
-import { useAuthContext } from "../(context)/providers";
+import { useAuthContext } from "../(context)/auth-context";
 
 const sidebarNavItems = [
   {

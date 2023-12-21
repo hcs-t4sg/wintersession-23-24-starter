@@ -1,7 +1,7 @@
 "use client";
 import { TypographyH2, TypographyP } from "@/components/ui/typography";
 import { redirect } from "next/navigation";
-import { useAuthContext } from "../(context)/providers";
+import { useAuthContext } from "../(context)/auth-context";
 
 export default function Dashboard() {
   const { user } = useAuthContext();

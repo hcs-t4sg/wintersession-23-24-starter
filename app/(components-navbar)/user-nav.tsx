@@ -12,17 +12,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/firebase/auth";
+import { type Profile } from "@/lib/firebase/schema";
 import { type User as FirebaseUser } from "firebase/auth";
 import { LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 
-export default function UserNav({ user }: { user: FirebaseUser }) {
+export default function UserNav({ user, profile }: { user: FirebaseUser; profile: Profile }) {
   const handleSignOut = () => {
     void signOut();
   };
 
-  const icon_name = user.displayName ?? user.email ?? "";
-  const icon_initials = icon_name.slice(0, 2).toUpperCase();
+  const icon_initials = profile.display_name.slice(0, 2).toUpperCase();
 
   return (
     <DropdownMenu>
@@ -37,7 +37,7 @@ export default function UserNav({ user }: { user: FirebaseUser }) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            {user.displayName && <p className="text-sm font-medium leading-none">{user.displayName}</p>}
+            {profile.display_name && <p className="text-sm font-medium leading-none">{profile.display_name}</p>}
             {user.email && <p className="text-xs leading-none text-muted-foreground">{user.email}</p>}
           </div>
         </DropdownMenuLabel>
