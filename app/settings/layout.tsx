@@ -1,8 +1,9 @@
+"use client";
 import { SidebarNav } from "@/components/global/sidebar-nav";
 import { Separator } from "@/components/ui/separator";
-import { PageHeader1, PageSubHeader1 } from "@/components/ui/typography";
-import { createServerSupabaseClient } from "@/lib/server-utils";
+import { PageHeader1, PageSubHeader1, TypographyP } from "@/components/ui/typography";
 import { redirect } from "next/navigation";
+import { useAuthContext } from "../(context)/providers";
 
 const sidebarNavItems = [
   {
@@ -19,14 +20,12 @@ interface SettingsLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function SettingsLayout({ children }: SettingsLayoutProps) {
-  // Create supabase server component client and obtain user session from stored cookie
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
+export default function SettingsLayout({ children }: SettingsLayoutProps) {
+  const { user } = useAuthContext();
+  if (user === "loading") {
+    return <TypographyP>Loading...</TypographyP>;
+  }
+  if (!user) {
     // this is a protected route - only users who are signed in can view this route
     redirect("/");
   }

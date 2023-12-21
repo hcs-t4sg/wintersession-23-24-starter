@@ -1,26 +1,25 @@
+"use client";
 import { TypographyH2, TypographyP } from "@/components/ui/typography";
-import { createServerSupabaseClient } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
+import { useAuthContext } from "../(context)/providers";
 
-export default async function Dashboard() {
-  // Create supabase server component client and obtain user session from stored cookie
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+export default function Dashboard() {
+  const { user } = useAuthContext();
 
-  if (!session) {
+  if (!user) {
     // this is a protected route - only users who are signed in can view this route
     redirect("/");
   }
 
-  const userEmail = session.user.email;
+  if (user === "loading") {
+    return <TypographyP>Loading...</TypographyP>;
+  }
 
   return (
     <>
       <TypographyH2>Dashboard</TypographyH2>
       <TypographyP>This is a protected route accessible only to signed-in users.</TypographyP>
-      {userEmail && <TypographyP>{`Your email is ${userEmail}`}</TypographyP>}
+      {user.email && <TypographyP>{`Your email is ${user.email}`}</TypographyP>}
     </>
   );
 }

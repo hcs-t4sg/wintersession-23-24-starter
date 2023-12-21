@@ -20,6 +20,5 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }], // https://typescript-eslint.io/rules/no-unused-vars/
-    "no-console": "error",
   },
 };

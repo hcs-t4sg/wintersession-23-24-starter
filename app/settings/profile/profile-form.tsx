@@ -9,8 +9,6 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { createBrowserSupabaseClient } from "@/lib/client-utils";
-import { type Database } from "@/lib/schema";
 import { useRouter } from "next/navigation";
 import { useState, type BaseSyntheticEvent } from "react";
 

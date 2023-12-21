@@ -1,33 +1,19 @@
+"use client";
+import { useAuthContext } from "@/app/(context)/providers";
 import { Separator } from "@/components/ui/separator";
-import { createServerSupabaseClient } from "@/lib/server-utils";
-import { getUserProfile } from "@/lib/utils";
+import { TypographyP } from "@/components/ui/typography";
 import { redirect } from "next/navigation";
 import ProfileForm from "./profile-form";
 
-function SettingsError({ message }: { message: string }) {
-  return (
-    <>
-      <h3 className="text-lg font-medium">Error</h3>
-      <p>{message}</p>
-    </>
-  );
-}
+export default function Settings() {
+  const { user } = useAuthContext();
 
-export default async function Settings() {
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
+  if (user === "loading") {
+    return <TypographyP>Loading...</TypographyP>;
+  }
+  if (!user) {
     // this is a protected route - only users who are signed in can view this route
     redirect("/");
-  }
-
-  const { profile, error } = await getUserProfile(supabase, session);
-
-  if (error) {
-    return <SettingsError message={error.message} />;
   }
 
   return (
@@ -38,7 +24,7 @@ export default async function Settings() {
           <p className="text-sm text-muted-foreground">This is how others will see you on the site.</p>
         </div>
         <Separator />
-        <ProfileForm profile={profile} />
+        <ProfileForm user={user} />
       </div>
     </>
   );

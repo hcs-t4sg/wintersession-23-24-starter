@@ -1,3 +1,4 @@
+"use client";
 import { TypographyH2, TypographyP } from "@/components/ui/typography";
 
 export default function Home() {

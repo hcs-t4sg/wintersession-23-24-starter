@@ -1,19 +1,17 @@
-import { createServerSupabaseClient } from "@/lib/server-utils";
+"use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useAuthContext } from "../(context)/providers";
 
-export default async function Navbar({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
-  // Create supabase server component client and obtain user session from stored cookie
-  const supabase = createServerSupabaseClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+export default function Navbar({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+  const { user } = useAuthContext();
+
   return (
     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)} {...props}>
       <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
         Home
       </Link>
-      {session && (
+      {user && user != "loading" && (
         <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
           Dashboard
         </Link>
