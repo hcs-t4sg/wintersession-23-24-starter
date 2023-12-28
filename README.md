@@ -105,7 +105,9 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
 7. Click `Create project` button.
 8. Click on the web icon button to create your web app. It will show a text popup `Web`.
 9. Register app by giving it a nickname and click `Register app` button.
-10. In your project folder, duplicate the `.env.example` file (in the root directory) and rename it to `.env`. Populate the environment variables in that file with the config values from your Firebase dashboard. (You can view these values from your dashboard by going to Project Overview > Gear in top left > Project Settings > Scroll down to Your Apps.) The .env should look something like:
+10. We need to set up Google authentication. In the left sidebar, go to Build > Authentication > Get Started > Google > Enable (designate a support email) > Save.
+11. Now we need to set up the Firestore database. Go to Build > Firestore database > Create database and follow the instructions. If you choose to start in production mode you will need to modify the security rules to allow users to read/write to your DB; for wintersession, we recommend just using test mode.
+12. In your project folder, duplicate the `.env.example` file (in the root directory) and rename it to `.env`. Populate the environment variables in that file with the config values from your Firebase dashboard. (You can view these values from your dashboard by going to Project Overview > Gear in top left > Project Settings > Scroll down to Your Apps.) The .env should look something like:
 
    ```shell
    # Some other comments above
