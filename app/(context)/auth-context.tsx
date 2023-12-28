@@ -22,11 +22,7 @@ export const AuthContext = createContext<AuthContextType>({
 // Custom hook to access the authentication context
 export const useAuthContext = () => useContext(AuthContext);
 
-interface AuthContextProviderProps {
-  children: ReactNode;
-}
-
-export default function AuthContextProvider({ children }: AuthContextProviderProps): JSX.Element {
+export default function AuthContextProvider({ children }: { children: ReactNode }) {
   // Set up state to track the authenticated user and loading status
   const [user, setUser] = useState<User | "loading" | null>("loading");
 
