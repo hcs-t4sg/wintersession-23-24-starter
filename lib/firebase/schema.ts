@@ -5,3 +5,8 @@ export interface Profile {
   display_name: string;
   biography: string;
 }
+
+export interface Course {
+  id: string;
+  name: string;
+}
