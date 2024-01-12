@@ -27,6 +27,8 @@ export default function Dashboard() {
     return unsubscribe;
   }, []);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const { user } = useAuthContext();
 
   if (!user) {
@@ -38,16 +40,23 @@ export default function Dashboard() {
     return <TypographyP>Loading...</TypographyP>;
   }
 
+  console.log(searchTerm);
+
+  let displayedCourses;
+  if (courses === "loading") {
+    displayedCourses = <p>Loading...</p>;
+  } else if (courses === null) {
+    displayedCourses = <p>Courses not found</p>;
+  } else {
+    const filteredCourses = courses.filter((course) => course.name.includes(searchTerm));
+    displayedCourses = filteredCourses.map((course) => <p key={course.id}>{course.name}</p>);
+  }
+
   return (
     <>
       <TypographyH2>Dashboard</TypographyH2>
-      {courses === "loading" ? (
-        <p>Loading...</p>
-      ) : courses === null ? (
-        <p>Courses not found</p>
-      ) : (
-        courses.map((course) => <p key={course.id}>{course.name}</p>)
-      )}
+      <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+      {displayedCourses}
       <TypographyP>This is a protected route accessible only to signed-in users.</TypographyP>
       {user.email && <TypographyP>{`Your email is ${user.email}`}</TypographyP>}
     </>
