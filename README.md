@@ -3,21 +3,17 @@
 - [T4SG Starter Project](#t4sg-starter-project)
   - [Introduction](#introduction)
   - [Setup](#setup)
-      - [Clone repository](#clone-repository)
-      - [Package installation](#package-installation)
-      - [Supabase Connection Setup](#supabase-connection-setup)
-      - [Supabase Database Setup](#supabase-database-setup)
-      - [Supabase CLI Setup](#supabase-cli-setup)
-      - [Run the webapp](#run-the-webapp)
-      - [(Recommended) Configure git message template](#recommended-configure-git-message-template)
-      - [Github CI workflow (for SSWEs, do during project setup)](#github-ci-workflow-for-sswes-do-during-project-setup)
+    - [Clone repository](#clone-repository)
+    - [Package installation](#package-installation)
+    - [Firebase Connection Setup](#firebase-connection-setup)
+    - [Run the webapp](#run-the-webapp)
+    - [(Recommended) Configure git message template](#recommended-configure-git-message-template)
+    - [Github CI workflow (for SSWEs, do during project setup)](#github-ci-workflow-for-sswes-do-during-project-setup)
   - [Stack references](#stack-references)
     - [Typescript](#typescript)
     - [Components and Styling: `shadcn/ui`, Radix, and Tailwind CSS](#components-and-styling-shadcnui-radix-and-tailwind-css)
     - [Next.js](#nextjs)
       - [Tips for learning:](#tips-for-learning)
-    - [Supabase](#supabase)
-        - [Troubleshooting the Supabase CLI](#troubleshooting-the-supabase-cli)
     - [Environment variables](#environment-variables)
   - [Development tools](#development-tools)
     - [Code formatting and linting tools](#code-formatting-and-linting-tools)
@@ -44,7 +40,7 @@ The project uses Next.js, a React-based framework with significant optimizations
 
 Although this project utilizes the Next.js 13 App Router, it is designed to only utilize **client components**. This is for Wintersession instructional purposes to mimic a traditional client-side React + Firebase project. In this case, the Next.js App Router provides an easy folder-based routing system to avoid the overhead of using an external package like `react-router`.
 
-Although this project can be repurposed for larger-scale projects (such as T4SG semester projects), note that the Firebase integration has only been accomplished for client components. However, integrating Firebase with React Server Components is possible ([reference here](https://firebase.google.com/codelabs/firebase-nextjs#0)) and is recommended if you intend to build a more performant webapp for a larger-scale project. Utilizing a Typescript adapter/ODM for Firestore such as [Typesaurus](https://typesaurus.com/) or [Fireschema](https://github.com/yarnaimo/fireschema) is also recommended. 
+Although this project can be repurposed for larger-scale projects (such as T4SG semester projects), note that the Firebase integration has only been accomplished for client components. However, integrating Firebase with React Server Components is possible ([reference here](https://firebase.google.com/codelabs/firebase-nextjs#0)) and is recommended if you intend to build a more performant webapp for a larger-scale project. Utilizing a Typescript adapter/ODM for Firestore such as [Typesaurus](https://typesaurus.com/) or [Fireschema](https://github.com/yarnaimo/fireschema) is also recommended.
 
 ---
 
@@ -83,10 +79,10 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
 
   ```bash
   added 414 packages, and audited 415 packages in 13s
-  
+
   149 packages are looking for funding
   run `npm fund` for details
-  
+
   found 0 vulnerabilities
   ```
 
@@ -109,15 +105,15 @@ git clone git@github.com:hcs-t4sg/starter-project-2023-v2.git
 11. Now we need to set up the Firestore database. Go to Build > Firestore database > Create database and follow the instructions. If you choose to start in production mode you will need to modify the security rules to allow users to read/write to your DB; for wintersession, we recommend just using test mode.
 12. In your project folder, duplicate the `.env.example` file (in the root directory) and rename it to `.env`. Populate the environment variables in that file with the config values from your Firebase dashboard. (You can view these values from your dashboard by going to Project Overview > Gear in top left > Project Settings > Scroll down to Your Apps.) The .env should look something like:
 
-   ```shell
-   # Some other comments above
-   NEXT_PUBLIC_FIREBASE_API_KEY="longstring"
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="projectname.firebaseapp.com"
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID="projectname"
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="projectname.appspot.com"
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="longint"
-   NEXT_PUBLIC_FIREBASE_APP_ID="longstring"
-   ```
+```shell
+# Some other comments above
+NEXT_PUBLIC_FIREBASE_API_KEY="longstring"
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="projectname.firebaseapp.com"
+NEXT_PUBLIC_FIREBASE_PROJECT_ID="projectname"
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="projectname.appspot.com"
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="longint"
+NEXT_PUBLIC_FIREBASE_APP_ID="longstring"
+```
 
 Note that this project uses a package from the popular [T3 stack](https://create.t3.gg/) to validate and provide typesafety to environment variables in `env.mjs` (more on this below). When using these environment variables in your code, you can import them from `env.mjs`.
 
@@ -180,9 +176,9 @@ A quick tip on coding with Typescript: When fixing type errors, you should avoid
 
 Also, note that this project implements a few additions to make Typescript's type-checking more strict (and thus encourage better code). Because of this, you may get typing/warning errors when using code repurposed from projects with less strict type-checking. If these become overly burdensome for you/your team, feel free to remove/disable them!
 
-* The package `ts-reset` is installed, implementing additional rules surrounding JSON and array operations ([read more here](https://github.com/total-typescript/ts-reset?tab=readme-ov-file))
-* The rule `noUncheckedIndexedAccess` is set to `true` in `tsconfig.json` to improve typesafety of accessing objects ([read more here](https://www.totaltypescript.com/tips/make-accessing-objects-safer-by-enabling-nouncheckedindexedaccess-in-tsconfig))
-* The `eslint` config in `eslintrc.cjs` extends the rule configurations `plugin:@typescript-eslint/recommended-type-checked` and `plugin:@typescript-eslint/stylistic-type-checked`, whereas other projects may extend the less-strict configurations `plugin:@typescript-eslint/recommended` and `plugin:@typescript-eslint/stylistic` ([read more here](https://typescript-eslint.io/linting/typed-linting/)).
+- The package `ts-reset` is installed, implementing additional rules surrounding JSON and array operations ([read more here](https://github.com/total-typescript/ts-reset?tab=readme-ov-file))
+- The rule `noUncheckedIndexedAccess` is set to `true` in `tsconfig.json` to improve typesafety of accessing objects ([read more here](https://www.totaltypescript.com/tips/make-accessing-objects-safer-by-enabling-nouncheckedindexedaccess-in-tsconfig))
+- The `eslint` config in `eslintrc.cjs` extends the rule configurations `plugin:@typescript-eslint/recommended-type-checked` and `plugin:@typescript-eslint/stylistic-type-checked`, whereas other projects may extend the less-strict configurations `plugin:@typescript-eslint/recommended` and `plugin:@typescript-eslint/stylistic` ([read more here](https://typescript-eslint.io/linting/typed-linting/)).
 
 Finally, note that type definitions for many `npm` packages are [maintained by the Typescript community](https://github.com/DefinitelyTyped/DefinitelyTyped) and may be found with the `@types/` prefix on [`npm`](https://www.npmjs.com), if they're not already included in the package itself (generally they are). Several of the config files in the project (ex: `.prettierrc.cjs`) manually import type definitions, but you generally will not need to worry about such syntax in your actual source code.
 
@@ -368,4 +364,3 @@ Deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netl
 ## Additional stack options (for SSWEs)
 
 Check out [this article](https://t4sg.notion.site/Tech-Stack-Recommendations-279121b43d254bdc96f41fea2af17f77?pvs=4) in our Eng Wiki for additional stack recommendations!
-
